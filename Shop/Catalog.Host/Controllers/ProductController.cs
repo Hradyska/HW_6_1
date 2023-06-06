@@ -23,11 +23,12 @@ namespace Catalog.Host.Controllers
             return Enumerable.Range(0, 9).Select(index => new Product
             {
                 Name = Names[index],
-                Price = Random.Shared.Next(10, 100)/10,
+                Price = Random.Shared.Next(10, 100) / 10,
                 Count = Random.Shared.Next(1, 20)
             })
             .ToArray();
         }
+
         [HttpPost(Name = "PostCatalog")]
         public Product Post(string name, int count, double price)
         {
