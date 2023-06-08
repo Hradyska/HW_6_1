@@ -33,6 +33,7 @@ public class CatalogBffController : ControllerBase
     }
 
     [HttpPost]
+    [Route("{id}")]
     [ProducesResponseType(typeof(GetItemsResponse<CatalogItemDto>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> GetItemsById(GetItemsRequest request)
     {

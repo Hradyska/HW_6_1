@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Catalog.Host.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230601103956_InitialMigration")]
+    [Migration("20230607094806_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -68,6 +68,7 @@ namespace Catalog.Host.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")

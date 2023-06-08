@@ -50,7 +50,7 @@ namespace Catalog.Host.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false),
                     Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: false),
                     Price = table.Column<decimal>(type: "numeric", nullable: false),
                     PictureFileName = table.Column<string>(type: "text", nullable: true),
                     CatalogTypeId = table.Column<int>(type: "integer", nullable: false),
