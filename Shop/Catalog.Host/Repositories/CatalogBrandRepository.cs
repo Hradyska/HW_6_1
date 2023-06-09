@@ -19,18 +19,11 @@ namespace Catalog.Host.Repositories
             _logger = logger;
         }
 
-        public async Task<PaginatedBrands<CatalogBrand>> GetByPageAsync(int pageIndex, int pageSize)
+        public async Task<GetBrands<CatalogBrand>> GetAsync()
         {
-            var totalItems = await _dbContext.CatalogBrands
-                .LongCountAsync();
-
-            var itemsOnPage = await _dbContext.CatalogBrands
-                .OrderBy(c => c.Id)
-                .Skip(pageSize * pageIndex)
-                .Take(pageSize)
-                .ToListAsync();
-
-            return new PaginatedBrands<CatalogBrand>() { TotalCount = totalItems, Data = itemsOnPage };
+            var brands = await _dbContext.CatalogBrands
+                .OrderBy(c => c.Id).ToListAsync();
+            return new GetBrands<CatalogBrand>() { Data = brands };
         }
 
         public async Task<int?> Add(string brand)

@@ -267,11 +267,7 @@ public class CatalogServiceTest
     public async Task GetCatalogBrandsAsync_Success()
     {
         // arrange
-        var testPageIndex = 0;
-        var testPageSize = 4;
-        var testTotalCount = 12;
-
-        var pagingPaginatedBrandsSuccess = new PaginatedBrands<CatalogBrand>()
+        var pagingPaginatedBrandsSuccess = new GetBrands<CatalogBrand>()
         {
             Data = new List<CatalogBrand>()
             {
@@ -280,7 +276,6 @@ public class CatalogServiceTest
                     Brand = "Brand1",
                 },
             },
-            TotalCount = testTotalCount,
         };
 
         var catalogBrandSuccess = new CatalogBrand()
@@ -293,37 +288,26 @@ public class CatalogServiceTest
             Brand = "Brand1"
         };
 
-        _catalogBrandRepository.Setup(s => s.GetByPageAsync(
-            It.Is<int>(i => i == testPageIndex),
-            It.Is<int>(i => i == testPageSize))).ReturnsAsync(pagingPaginatedBrandsSuccess);
+        _catalogBrandRepository.Setup(s => s.GetAsync()).ReturnsAsync(pagingPaginatedBrandsSuccess);
 
         _mapper.Setup(s => s.Map<CatalogBrandDto>(
             It.Is<CatalogBrand>(i => i.Equals(catalogBrandSuccess)))).Returns(catalogBrandDtoSuccess);
 
         // act
-        var result = await _catalogService.GetCatalogBrandsAsync(testPageSize, testPageIndex);
+        var result = await _catalogService.GetCatalogBrandsAsync();
 
         // assert
         result.Should().NotBeNull();
         result?.Data.Should().NotBeNull();
-        result?.Count.Should().Be(testTotalCount);
-        result?.PageIndex.Should().Be(testPageIndex);
-        result?.PageSize.Should().Be(testPageSize);
     }
 
     [Fact]
     public async Task GetCatalogBrandsAsync_Failed()
     {
-        // arrange
-        var testPageIndex = 1000;
-        var testPageSize = 10000;
-
-        _catalogBrandRepository.Setup(s => s.GetByPageAsync(
-            It.Is<int>(i => i == testPageIndex),
-            It.Is<int>(i => i == testPageSize))).Returns((Func<PaginatedBrandsResponse<CatalogBrandDto>>)null!);
+        _catalogBrandRepository.Setup(s => s.GetAsync()).Returns((Func<BrandsResponse<CatalogBrandDto>>)null!);
 
         // act
-        var result = await _catalogService.GetCatalogBrandsAsync(testPageSize, testPageIndex);
+        var result = await _catalogService.GetCatalogBrandsAsync();
 
         // assert
         result.Should().BeNull();
@@ -333,11 +317,7 @@ public class CatalogServiceTest
     public async Task GetCatalogTypesAsync_Success()
     {
         // arrange
-        var testPageIndex = 0;
-        var testPageSize = 4;
-        var testTotalCount = 12;
-
-        var pagingPaginatedTypesSuccess = new PaginatedTypes<CatalogType>()
+        var pagingPaginatedTypesSuccess = new GetTypes<CatalogType>()
         {
             Data = new List<CatalogType>()
             {
@@ -346,7 +326,6 @@ public class CatalogServiceTest
                     Type = "Type1",
                 },
             },
-            TotalCount = testTotalCount,
         };
 
         var catalogTypesSuccess = new CatalogType()
@@ -359,37 +338,26 @@ public class CatalogServiceTest
             Type = "Type1"
         };
 
-        _catalogTypeRepository.Setup(s => s.GetByPageAsync(
-            It.Is<int>(i => i == testPageIndex),
-            It.Is<int>(i => i == testPageSize))).ReturnsAsync(pagingPaginatedTypesSuccess);
+        _catalogTypeRepository.Setup(s => s.GetAsync()).ReturnsAsync(pagingPaginatedTypesSuccess);
 
         _mapper.Setup(s => s.Map<CatalogTypeDto>(
             It.Is<CatalogType>(i => i.Equals(catalogTypesSuccess)))).Returns(catalogTypesDtoSuccess);
 
         // act
-        var result = await _catalogService.GetCatalogTypesAsync(testPageSize, testPageIndex);
+        var result = await _catalogService.GetCatalogTypesAsync();
 
         // assert
         result.Should().NotBeNull();
         result?.Data.Should().NotBeNull();
-        result?.Count.Should().Be(testTotalCount);
-        result?.PageIndex.Should().Be(testPageIndex);
-        result?.PageSize.Should().Be(testPageSize);
     }
 
     [Fact]
     public async Task GetCatalogTypesAsync_Failed()
     {
-        // arrange
-        var testPageIndex = 1000;
-        var testPageSize = 10000;
-
-        _catalogTypeRepository.Setup(s => s.GetByPageAsync(
-            It.Is<int>(i => i == testPageIndex),
-            It.Is<int>(i => i == testPageSize))).Returns((Func<PaginatedTypesResponse<CatalogTypeDto>>)null!);
+        _catalogTypeRepository.Setup(s => s.GetAsync()).Returns((Func<TypesResponse<CatalogTypeDto>>)null!);
 
         // act
-        var result = await _catalogService.GetCatalogTypesAsync(testPageSize, testPageIndex);
+        var result = await _catalogService.GetCatalogTypesAsync();
 
         // assert
         result.Should().BeNull();

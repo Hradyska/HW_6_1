@@ -102,42 +102,36 @@ public class CatalogService : BaseDataService<ApplicationDbContext>, ICatalogSer
         });
     }
 
-    public async Task<PaginatedBrandsResponse<CatalogBrandDto>> GetCatalogBrandsAsync(int pageSize, int pageIndex)
+    public async Task<BrandsResponse<CatalogBrandDto>> GetCatalogBrandsAsync()
     {
         return await ExecuteSafeAsync(async () =>
         {
-            var result = await _catalogBrandRepository.GetByPageAsync(pageIndex, pageSize);
+            var result = await _catalogBrandRepository.GetAsync();
             if (result == null)
             {
                 return null;
             }
 
-            return new PaginatedBrandsResponse<CatalogBrandDto>()
+            return new BrandsResponse<CatalogBrandDto>()
             {
-                Count = result.TotalCount,
                 Data = result.Data.Select(s => _mapper.Map<CatalogBrandDto>(s)).ToList(),
-                PageIndex = pageIndex,
-                PageSize = pageSize
             };
         });
     }
 
-    public async Task<PaginatedTypesResponse<CatalogTypeDto>> GetCatalogTypesAsync(int pageSize, int pageIndex)
+    public async Task<TypesResponse<CatalogTypeDto>> GetCatalogTypesAsync()
     {
         return await ExecuteSafeAsync(async () =>
         {
-            var result = await _catalogTypeRepository.GetByPageAsync(pageIndex, pageSize);
+            var result = await _catalogTypeRepository.GetAsync();
             if (result == null)
             {
                 return null;
             }
 
-            return new PaginatedTypesResponse<CatalogTypeDto>()
+            return new TypesResponse<CatalogTypeDto>()
             {
-                Count = result.TotalCount,
                 Data = result.Data.Select(s => _mapper.Map<CatalogTypeDto>(s)).ToList(),
-                PageIndex = pageIndex,
-                PageSize = pageSize
             };
         });
     }

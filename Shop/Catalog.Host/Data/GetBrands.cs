@@ -1,9 +1,7 @@
 ﻿namespace Catalog.Host.Data
 {
-    public class PaginatedTypes<T>
+    public class GetBrands<T>
     {
-        public long TotalCount { get; init; }
-
         public IEnumerable<T> Data { get; init; } = null!;
     }
 }
