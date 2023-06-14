@@ -1,4 +1,5 @@
 using System.Net;
+using Catalog.Host.Data.Entities;
 using Catalog.Host.Models.Requests;
 using Catalog.Host.Models.Response;
 using Catalog.Host.Services.Interfaces;
@@ -26,7 +27,18 @@ public class CatalogItemController : ControllerBase
     [ProducesResponseType(typeof(AddItemResponse<int?>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> Add(CreateProductRequest request)
     {
-        var result = await _catalogItemService.Add(request.Name, request.Description, request.Price, request.AvailableStock, request.CatalogBrandId, request.CatalogTypeId, request.PictureFileName);
+        CatalogItem item = new CatalogItem()
+        {
+            Name = request.Name,
+            Description = request.Description,
+            Price = request.Price,
+            AvailableStock = request.AvailableStock,
+            CatalogBrandId = request.CatalogBrandId,
+            CatalogTypeId = request.CatalogTypeId,
+            PictureFileName = request.PictureFileName
+        };
+
+        var result = await _catalogItemService.Add(item);
         return Ok(new AddItemResponse<int?>() { Id = result });
     }
 
@@ -44,7 +56,18 @@ public class CatalogItemController : ControllerBase
     [ProducesResponseType((int)HttpStatusCode.OK)]
     public async Task<IActionResult> Update(int id, CreateProductRequest request)
     {
-        var result = await _catalogItemService.Update(id, request.Name, request.Description, request.Price, request.AvailableStock, request.CatalogBrandId, request.CatalogTypeId, request.PictureFileName);
+        CatalogItem item = new CatalogItem()
+        {
+            Id = id,
+            Name = request.Name,
+            Description = request.Description,
+            Price = request.Price,
+            AvailableStock = request.AvailableStock,
+            CatalogBrandId = request.CatalogBrandId,
+            CatalogTypeId = request.CatalogTypeId,
+            PictureFileName = request.PictureFileName
+        };
+        var result = await _catalogItemService.Update(item);
         return Ok(new AddItemResponse<int?>() { Id = result });
     }
 }

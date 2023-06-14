@@ -71,21 +71,13 @@ public class CatalogItemRepository : ICatalogItemRepository
         return new GetItems<CatalogItem>() { Data = items };
     }
 
-    public async Task<int?> Add(string name, string description, decimal price, int availableStock, int catalogBrandId, int catalogTypeId, string pictureFileName)
+    public async Task<int?> Add(CatalogItem item)
     {
-        var item = await _dbContext.AddAsync(new CatalogItem
-        {
-            CatalogBrandId = catalogBrandId,
-            CatalogTypeId = catalogTypeId,
-            Description = description,
-            Name = name,
-            PictureFileName = pictureFileName,
-            Price = price
-        });
+        var catalogItem = await _dbContext.AddAsync(item);
 
         await _dbContext.SaveChangesAsync();
 
-        return item.Entity.Id;
+        return catalogItem.Entity.Id;
     }
 
     public async Task<int?> Remove(int id)
@@ -98,20 +90,10 @@ public class CatalogItemRepository : ICatalogItemRepository
         return item.Id;
     }
 
-    public async Task<int?> Update(int id, string name, string description, decimal price, int availableStock, int catalogBrandId, int catalogTypeId, string pictureFileName)
+    public async Task<int?> Update(CatalogItem item)
     {
-        var item = _dbContext.CatalogItems.Update(new CatalogItem
-        {
-            Id = id,
-            Name = name,
-            Description = description,
-            Price = price,
-            AvailableStock = availableStock,
-            CatalogBrandId = catalogBrandId,
-            CatalogTypeId = catalogTypeId,
-            PictureFileName = pictureFileName,
-        });
+        var catalogItem = _dbContext.CatalogItems.Update(item);
         await _dbContext.SaveChangesAsync();
-        return item.Entity.Id;
+        return catalogItem.Entity.Id;
     }
 }

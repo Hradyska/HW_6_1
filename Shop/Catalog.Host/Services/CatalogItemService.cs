@@ -1,4 +1,5 @@
 using Catalog.Host.Data;
+using Catalog.Host.Data.Entities;
 using Catalog.Host.Repositories.Interfaces;
 using Catalog.Host.Services.Interfaces;
 
@@ -17,9 +18,9 @@ public class CatalogItemService : BaseDataService<ApplicationDbContext>, ICatalo
         _catalogItemRepository = catalogItemRepository;
     }
 
-    public Task<int?> Add(string name, string description, decimal price, int availableStock, int catalogBrandId, int catalogTypeId, string pictureFileName)
+    public Task<int?> Add(CatalogItem item)
     {
-        return ExecuteSafeAsync(() => _catalogItemRepository.Add(name, description, price, availableStock, catalogBrandId, catalogTypeId, pictureFileName));
+        return ExecuteSafeAsync(() => _catalogItemRepository.Add(item));
     }
 
     public Task<int?> Remove(int id)
@@ -27,8 +28,8 @@ public class CatalogItemService : BaseDataService<ApplicationDbContext>, ICatalo
         return ExecuteSafeAsync(() => _catalogItemRepository.Remove(id));
     }
 
-    public Task<int?> Update(int id, string name, string description, decimal price, int availableStock, int catalogBrandId, int catalogTypeId, string pictureFileName)
+    public Task<int?> Update(CatalogItem item)
     {
-        return ExecuteSafeAsync(() => _catalogItemRepository.Update(id, name, description, price, availableStock, catalogBrandId, catalogTypeId, pictureFileName));
+        return ExecuteSafeAsync(() => _catalogItemRepository.Update(item));
     }
 }

@@ -1,8 +1,9 @@
+using Catalog.Host.Data.Entities;
 namespace Catalog.Host.Services.Interfaces;
 
 public interface ICatalogItemService
 {
-    Task<int?> Add(string name, string description, decimal price, int availableStock, int catalogBrandId, int catalogTypeId, string pictureFileName);
+    Task<int?> Add(CatalogItem item);
     Task<int?> Remove(int id);
-    Task<int?> Update(int id, string name, string description, decimal price, int availableStock, int catalogBrandId, int catalogTypeId, string pictureFileName);
+    Task<int?> Update(CatalogItem item);
 }

@@ -9,7 +9,7 @@ public interface ICatalogItemRepository
     Task<GetItems<CatalogItem>> GetByIdAsync(int id);
     Task<GetItems<CatalogItem>> GetByBrandAsync(int brandId);
     Task<GetItems<CatalogItem>> GetByTypeAsync(int typeId);
-    Task<int?> Add(string name, string description, decimal price, int availableStock, int catalogBrandId, int catalogTypeId, string pictureFileName);
+    Task<int?> Add(CatalogItem item);
     Task<int?> Remove(int id);
-    Task<int?> Update(int id, string name, string description, decimal price, int availableStock, int catalogBrandId, int catalogTypeId, string pictureFileName);
+    Task<int?> Update(CatalogItem item);
 }

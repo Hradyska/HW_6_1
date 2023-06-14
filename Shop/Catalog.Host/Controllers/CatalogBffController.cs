@@ -59,7 +59,7 @@ public class CatalogBffController : ControllerBase
 
     [HttpPost]
     [ProducesResponseType(typeof(BrandsResponse<CatalogBrandDto>), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> GetBrands()
+    public async Task<IActionResult> Brands()
     {
         var result = await _catalogService.GetCatalogBrandsAsync();
         return Ok(result);
@@ -67,7 +67,7 @@ public class CatalogBffController : ControllerBase
 
     [HttpPost]
     [ProducesResponseType(typeof(TypesResponse<CatalogTypeDto>), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> GetTypes()
+    public async Task<IActionResult> Types()
     {
         var result = await _catalogService.GetCatalogTypesAsync();
         return Ok(result);
