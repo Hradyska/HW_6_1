@@ -48,7 +48,7 @@ public class CatalogService : ICatalogService
 
     public async Task<IEnumerable<SelectListItem>> GetBrands()
     {
-        var result = await _httpClient.SendAsync<GetCatalogBrand, object > ($"{_settings.Value.CatalogUrl}/brands", HttpMethod.Post, null);
+        var result = await _httpClient.SendAsync<GetCatalogBrand, object> ($"{_settings.Value.CatalogUrl}/brands", HttpMethod.Post, null);
         List<SelectListItem> list = new List<SelectListItem>();
         foreach (var item in result.Data)
         {
