@@ -33,8 +33,9 @@ public class CatalogController : Controller
         var vm = new IndexViewModel()
         {
             CatalogItems = catalog.Data,
-            Brands = await _catalogService.GetBrands(),
             Types = await _catalogService.GetTypes(),
+            Brands = await _catalogService.GetBrands(),
+
             PaginationInfo = info
         };
 
