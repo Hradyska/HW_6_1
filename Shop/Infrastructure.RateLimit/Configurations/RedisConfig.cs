@@ -1,4 +1,4 @@
-namespace Basket.Host.Configurations;
+namespace Infrastructure.RateLimit.Configurations;
 
 public class RedisConfig
 {

@@ -3,12 +3,16 @@ using Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Basket.Host.Services.Interfaces;
 using Basket.Host.Services;
-
+using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Any;
+using Basket.Host.Models.Responses;
+using Infrastructure.RateLimit.Filters;
 namespace Basket.Host.Controllers
 {
     [ApiController]
     [Authorize(Policy = AuthPolicy.AllowEndUserPolicy)]
     [Route(ComponentDefaults.DefaultRoute)]
+    [LimitRequestsFilter(10)]
     public class BasketBffController : ControllerBase
     {
         private readonly ILogger<BasketBffController> _logger;
@@ -21,22 +25,29 @@ namespace Basket.Host.Controllers
             _logger = logger;
             _basketService = catalogService;
         }
+
         [HttpPost]
         [AllowAnonymous]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> BasketLogger(string testMessage)
+        public async Task<IActionResult> BasketLogger()
         {
-            _logger.LogInformation($"Logg from method {nameof(BasketLogger)}: {testMessage}");
+            var user = User.Claims.FirstOrDefault(x => x.Type == "sub");
+            if (user == null)
+            {
+                await _basketService.LoggerAsync("Log in without authorization.");
+                return Ok();
+            }
+            await _basketService.LoggerAsync($"Log in with Id: {user}");
             return Ok();
         }
 
         [HttpPost]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> BasketLoggerId()
+        public async Task<IActionResult> GetId()
         {
-            var basketLogg = User.Claims.FirstOrDefault(x => x.Type == "sub")?.Value;
-            _logger.LogInformation($"Logg from method {nameof(BasketLoggerId)}: userId = {basketLogg!} ");
-            return Ok(basketLogg);
+            var user = User.Claims.FirstOrDefault(x => x.Type == "sub")?.Value;
+            var res = await _basketService.GetUserIdAsync(user);
+            return Ok(res);
         }
 
     }

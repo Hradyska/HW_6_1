@@ -1,10 +1,13 @@
-using Basket.Host.Configurations;
+
 using Basket.Host.Services;
 using Basket.Host.Services.Interfaces;
 using Infrastructure.Extensions;
 using Infrastructure.Filters;
 using Microsoft.OpenApi.Models;
-
+using Infrastructure.RateLimit.Extensions;
+using Infrastructure.RateLimit.Services.Interfaces;
+using Infrastructure.RateLimit.Services;
+using Infrastructure.RateLimit.Configurations;
 namespace Catalog.Host
 {
     public class Program
@@ -59,8 +62,9 @@ namespace Catalog.Host
             builder.Services.AddAuthorization(configuration);
 
             builder.Services.AddTransient<IJsonSerializer, JsonSerializer>();
-            //builder.Services.AddTransient<IRedisCacheConnectionService, RedisCacheConnectionService>();
-            //builder.Services.AddTransient<ICacheService, CacheService>();
+            builder.Services.AddTransient<IRedisCacheConnectionService, RedisCacheConnectionService>();
+            builder.Services.AddTransient<ICacheService, CacheService>();
+            builder.Services.AddTransient<IBasketItemService<int>, BasketItemService<int>>();
             builder.Services.AddTransient<IBasketService, BasketService>();
 
             builder.Services.AddCors(options =>

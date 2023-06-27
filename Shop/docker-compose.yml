@@ -44,6 +44,7 @@ services:
     depends_on:
       - catalog.api
       - identityserver
+      - basket.api
     ports:
       - 5001:5001
   identityserver:
@@ -84,6 +85,12 @@ services:
       POSTGRES_PASSWORD: postgres
     ports:
       - 5433:5432
+  redis:
+    image: redis
+    container_name: lde.redis
+    ports:
+      - 6380:6379
+
 networks:
   default:
     driver: bridge

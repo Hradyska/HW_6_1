@@ -1,15 +1,20 @@
-using Catalog.Host.Configurations;
 using Catalog.Host.Data;
 using Catalog.Host.Repositories;
 using Catalog.Host.Repositories.Interfaces;
 using Catalog.Host.Services;
 using Catalog.Host.Services.Interfaces;
+using Catalog.Host.Configurations;
 using Infrastructure.Extensions;
 using Infrastructure.Filters;
 using Infrastructure.Services;
 using Infrastructure.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Infrastructure.RateLimit.Services.Interfaces;
+using Infrastructure.RateLimit.Services;
+using Infrastructure.RateLimit.Extensions;
+using Infrastructure.RateLimit.Configurations;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace Catalog.Host
 {
@@ -58,25 +63,26 @@ namespace Catalog.Host
 
                 options.OperationFilter<AuthorizeCheckOperationFilter>();
             });
+            builder.AddConfiguration();
+            builder.Services.Configure<RedisConfig>(
+                builder.Configuration.GetSection("Redis"));
 
             builder.AddConfiguration();
             builder.Services.Configure<CatalogConfig>(configuration);
             builder.Services.AddAuthorization(configuration);
 
             builder.Services.AddAutoMapper(typeof(Program));
-
+            builder.Services.AddTransient<IJsonSerializer, JsonSerializer>();
+            builder.Services.AddTransient<IDistributedCache, MemoryDistributedCache>();
+            builder.Services.AddTransient<IRedisCacheConnectionService, RedisCacheConnectionService>();
+            builder.Services.AddTransient<ICacheService, CacheService>();
             builder.Services.AddTransient<ICatalogItemRepository, CatalogItemRepository>();
             builder.Services.AddTransient<ICatalogService, CatalogService>();
             builder.Services.AddTransient<ICatalogItemService, CatalogItemService>();
-
             builder.Services.AddTransient<ICatalogBrandRepository, CatalogBrandRepository>();
-
             builder.Services.AddTransient<ICatalogBrandService, CatalogBrandService>();
-
             builder.Services.AddTransient<ICatalogTypeRepository, CatalogTypeRepository>();
-
             builder.Services.AddTransient<ICatalogTypeService, CatalogTypeService>();
-
             builder.Services.AddDbContextFactory<ApplicationDbContext>(opts => opts.UseNpgsql(configuration["ConnectionString"]));
             builder.Services.AddScoped<IDbContextWrapper<ApplicationDbContext>, DbContextWrapper<ApplicationDbContext>>();
 
@@ -106,6 +112,7 @@ namespace Catalog.Host
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseRateLimiting(10, TimeSpan.FromMinutes(1));
 
             app.UseEndpoints(endpoints =>
             {

@@ -9,6 +9,7 @@ using Infrastructure;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Catalog.Host.Models.Enums;
 
 namespace Catalog.Host.Controllers;
 
@@ -34,9 +35,9 @@ public class CatalogBffController : ControllerBase
     [HttpPost]
     [AllowAnonymous]
     [ProducesResponseType(typeof(PaginatedItemsResponse<CatalogItemDto>), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> Items(PaginatedItemsRequest request)
+    public async Task<IActionResult> Items(PaginatedItemsRequest<CatalogTypeFilter> request)
     {
-        var result = await _catalogService.GetCatalogItemsAsync(request.PageSize, request.PageIndex);
+        var result = await _catalogService.GetCatalogItemsAsync(request.PageSize, request.PageIndex, request.Filters);
         return Ok(result);
     }
 

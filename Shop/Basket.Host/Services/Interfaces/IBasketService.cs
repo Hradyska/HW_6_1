@@ -1,9 +1,10 @@
-﻿using Basket.Host.Models.Requests;
+﻿using Basket.Host.Models.Responses;
 
 namespace Basket.Host.Services.Interfaces
 {
     public interface IBasketService
     {
-        public Task Add(AddItemRequest item, string userId);
+        public Task<string> GetUserIdAsync(string userId);
+        public Task LoggerAsync(string logg);
     }
 }

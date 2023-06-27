@@ -1,25 +1,24 @@
-﻿using Basket.Host.Models.Requests;
-using Basket.Host.Models.Responses;
+﻿using Basket.Host.Models.Responses;
 using Basket.Host.Services.Interfaces;
-using Basket.Host.Models.Dtos;
+using Infrastructure.RateLimit.Services.Interfaces;
+
 namespace Basket.Host.Services
 {
     public class BasketService : IBasketService
     {
-        public BasketService(
-            ILogger<BasketService> logger)
+        private readonly ILogger _logger;
+        public BasketService(ILogger<BasketService> logger)
         {
+            _logger = logger;
         }
-        [HttpPost]
-        [ProducesResponseType(typeof(AddItemResponse<int?>), (int)HttpStatusCode.OK)]
-        public Task Add(AddItemRequest item, string userId)
+        public Task<string> GetUserIdAsync(string userId)
         {
-            BasketItemDto basketItem = new BasketItemDto()
-            {
-                Id = userId,
-                ItemId = item.ItemId,
-            };
-            return Task.CompletedTask;
+            _logger.LogInformation($"user ID is: {userId}");
+            return Task.FromResult(userId);
+        }
+        public async Task LoggerAsync(string logg)
+        {
+            _logger.LogInformation(logg);
         }
     }
 }

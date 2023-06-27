@@ -6,32 +6,41 @@ using Microsoft.AspNetCore.Mvc;
 using Basket.Host.Services.Interfaces;
 using Basket.Host.Models.Responses;
 using Basket.Host.Models.Requests;
+using Infrastructure.RateLimit.Filters;
 
 namespace Basket.Host.Controllers
 {
     [ApiController]
     [Authorize(Policy = AuthPolicy.AllowClientPolicy)]
+    [LimitRequestsFilter(10)]
     [Scope("basket.basketitem")]
     [Route(ComponentDefaults.DefaultRoute)]
-    public class BasketController : Controller
+    public class BasketController : ControllerBase
     {
         private readonly ILogger<BasketController> _logger;
-        private readonly IBasketService _basketService;
+        private readonly IBasketItemService<int> _basketItemService;
 
-        public BasketController(ILogger<BasketController> logger, IBasketService basketService)
+        public BasketController(ILogger<BasketController> logger, IBasketItemService<int> basketService)
         {
             _logger = logger;
-            _basketService = basketService;
+            _basketItemService = basketService;
         }
         [HttpPost]
-        [ProducesResponseType(typeof(AddItemResponse<int?>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Add(AddItemRequest request)
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<IActionResult> Add( AddRequest<int> itemId)
         {
-            var basketId = User.Claims.FirstOrDefault(u => u.Value == "sub")?.Value;
-            var addItem = _basketService.Add(request, basketId);
+            var user = User.Claims.FirstOrDefault(x => x.Type == "sub")?.Value;
+            await _basketItemService.AddAsync(itemId, user);
             return Ok();
-
         }
 
+        [HttpPost]
+        [ProducesResponseType(typeof(GetDataResponse<int>),(int)HttpStatusCode.OK)]
+        public async Task<IActionResult> Get()
+        {
+            var user = User.Claims.FirstOrDefault(x => x.Type == "sub")?.Value;
+            var result = await _basketItemService.GetDataAsync(user);
+            return Ok(result);
+        }
     }
 }
