@@ -12,7 +12,6 @@ namespace Basket.Host.Controllers
     [ApiController]
     [Authorize(Policy = AuthPolicy.AllowEndUserPolicy)]
     [Route(ComponentDefaults.DefaultRoute)]
-    [LimitRequestsFilter(10)]
     public class BasketBffController : ControllerBase
     {
         private readonly ILogger<BasketBffController> _logger;
@@ -29,6 +28,7 @@ namespace Basket.Host.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ProducesResponseType((int)HttpStatusCode.OK)]
+        [LimitRequestsFilter(10)]
         public async Task<IActionResult> BasketLogger()
         {
             var user = User.Claims.FirstOrDefault(x => x.Type == "sub");
@@ -43,6 +43,7 @@ namespace Basket.Host.Controllers
 
         [HttpPost]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
+        [LimitRequestsFilter(10)]
         public async Task<IActionResult> GetId()
         {
             var user = User.Claims.FirstOrDefault(x => x.Type == "sub")?.Value;

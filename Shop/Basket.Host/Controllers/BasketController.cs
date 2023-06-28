@@ -12,7 +12,6 @@ namespace Basket.Host.Controllers
 {
     [ApiController]
     [Authorize(Policy = AuthPolicy.AllowClientPolicy)]
-    [LimitRequestsFilter(10)]
     [Scope("basket.basketitem")]
     [Route(ComponentDefaults.DefaultRoute)]
     public class BasketController : ControllerBase
@@ -27,6 +26,7 @@ namespace Basket.Host.Controllers
         }
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.OK)]
+        [LimitRequestsFilter(10)]
         public async Task<IActionResult> Add( AddRequest<int> itemId)
         {
             var user = User.Claims.FirstOrDefault(x => x.Type == "sub")?.Value;
@@ -36,6 +36,7 @@ namespace Basket.Host.Controllers
 
         [HttpPost]
         [ProducesResponseType(typeof(GetDataResponse<int>),(int)HttpStatusCode.OK)]
+        [LimitRequestsFilter(10)]
         public async Task<IActionResult> Get()
         {
             var user = User.Claims.FirstOrDefault(x => x.Type == "sub")?.Value;

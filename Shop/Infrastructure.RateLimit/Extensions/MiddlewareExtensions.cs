@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using System.Collections.Generic;
 using Infrastructure.RateLimit.Middlewares;
+using Microsoft.Extensions.DependencyInjection;
+
 namespace Infrastructure.RateLimit.Extensions
 {
     public static class MiddlewareExtensions

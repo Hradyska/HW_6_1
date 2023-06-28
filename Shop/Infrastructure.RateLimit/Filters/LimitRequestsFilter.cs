@@ -11,7 +11,6 @@ namespace Infrastructure.RateLimit.Filters
     public class LimitRequestsFilter : ActionFilterAttribute
     {
         private readonly int _limit;
-       // private readonly IRedisCacheConnectionService _connectionService;
         public LimitRequestsFilter(int limit)
         {
             _limit = limit;
@@ -25,12 +24,11 @@ namespace Infrastructure.RateLimit.Filters
 
             try
             {
-                Console.WriteLine("enter point in rateLimit filter");
                 var redis = ConnectionMultiplexer.Connect("www.alevelwebsite.com:6380");
                 var database = redis.GetDatabase();
 
                 var currentCount = await database.StringIncrementAsync(key);
-                Console.WriteLine($"database in rateLimit filter for {key}");
+                
                 if (currentCount == 1)
                 {
                     await database.KeyExpireAsync(key, TimeSpan.FromMinutes(1));
@@ -44,8 +42,7 @@ namespace Infrastructure.RateLimit.Filters
             }
             catch (Exception ex)
             {
-                // Handle connection or Redis errors
-                Console.WriteLine($"Exception rateLimit filter {ex.Message}");
+
                 context.Result = new StatusCodeResult(500); // Internal Server Error
                 return;
             }

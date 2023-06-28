@@ -28,7 +28,6 @@ public class RateLimittingMiddleware
         var endpoint = context.GetEndpoint;
         var key = $"rate_limit:{endpoint}{ipAddress}";
 
-
         var cacheEntry = await _cache.GetStringAsync(key);
         if (cacheEntry == null)
         {

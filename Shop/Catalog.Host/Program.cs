@@ -15,6 +15,9 @@ using Infrastructure.RateLimit.Services;
 using Infrastructure.RateLimit.Extensions;
 using Infrastructure.RateLimit.Configurations;
 using Microsoft.Extensions.Caching.Distributed;
+using StackExchange.Redis;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
+using Microsoft.Extensions.Configuration;
 
 namespace Catalog.Host
 {
@@ -85,6 +88,10 @@ namespace Catalog.Host
             builder.Services.AddTransient<ICatalogTypeService, CatalogTypeService>();
             builder.Services.AddDbContextFactory<ApplicationDbContext>(opts => opts.UseNpgsql(configuration["ConnectionString"]));
             builder.Services.AddScoped<IDbContextWrapper<ApplicationDbContext>, DbContextWrapper<ApplicationDbContext>>();
+            builder.Services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = builder.Configuration.GetSection("Redis")["Host"];
+            });
 
             builder.Services.AddCors(options =>
             {
