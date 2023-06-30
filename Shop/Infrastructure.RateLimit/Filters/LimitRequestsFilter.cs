@@ -1,30 +1,39 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Infrastructure.RateLimit.Services;
 using Infrastructure.RateLimit.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
+#pragma warning disable CS0501
 
 namespace Infrastructure.RateLimit.Filters
 {
     public class LimitRequestsFilter : ActionFilterAttribute
     {
-        private readonly int _limit;
+        private int _limit;
+        
         public LimitRequestsFilter(int limit)
         {
-            _limit = limit;
+            Limit = limit;
         }
-        
+
+        public int Limit { get { return _limit; } init { _limit = value; } }
+   
+
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var ipAddress = context.HttpContext.Connection.RemoteIpAddress?.ToString();
+            var serviceProvider = context.HttpContext.RequestServices;
             var endpoint = context.HttpContext.GetEndpoint();
             var key = $"{endpoint}:{ipAddress}";
 
             try
             {
-                var redis = ConnectionMultiplexer.Connect("www.alevelwebsite.com:6380");
+                var redis = serviceProvider.GetRequiredService<IRedisCacheConnectionService>().Connection;
+                // var redis = ConnectionMultiplexer.Connect("www.alevelwebsite.com:6380");
                 var database = redis.GetDatabase();
 
                 var currentCount = await database.StringIncrementAsync(key);
