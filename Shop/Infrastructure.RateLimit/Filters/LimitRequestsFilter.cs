@@ -20,9 +20,6 @@ namespace Infrastructure.RateLimit.Filters
             Limit = limit;
         }
 
-        public int Limit { get { return _limit; } init { _limit = value; } }
-   
-
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var ipAddress = context.HttpContext.Connection.RemoteIpAddress?.ToString();
