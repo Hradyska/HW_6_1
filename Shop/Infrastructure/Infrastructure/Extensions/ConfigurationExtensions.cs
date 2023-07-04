@@ -13,5 +13,6 @@ public static class ConfigurationExtensions
             builder.Configuration.GetSection("Client"));
         builder.Services.Configure<AuthorizationConfig>(
             builder.Configuration.GetSection("Authorization"));
+        
     }
 }

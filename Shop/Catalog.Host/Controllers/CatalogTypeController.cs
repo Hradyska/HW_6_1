@@ -28,6 +28,11 @@ public class CatalogTypeController : ControllerBase
     [ProducesResponseType(typeof(AddTypeResponse<int?>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> Add(CreateTypeRequest request)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
         var result = await _catalogTypeService.Add(request.Type);
         return Ok(new AddTypeResponse<int?>() { Id = result });
     }
@@ -37,6 +42,11 @@ public class CatalogTypeController : ControllerBase
     [ProducesResponseType(typeof(AddTypeResponse<int?>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> Remove(int id)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
         var result = await _catalogTypeService.Remove(id);
         return Ok(new AddTypeResponse<int?>() { Id = result });
     }
@@ -46,6 +56,11 @@ public class CatalogTypeController : ControllerBase
     [ProducesResponseType(typeof(AddTypeResponse<int?>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> Update(int id, CreateTypeRequest request)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
         var result = await _catalogTypeService.Update(id, request.Type);
         return Ok(new AddTypeResponse<int?>() { Id = result });
     }

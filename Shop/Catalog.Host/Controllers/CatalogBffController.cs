@@ -37,6 +37,11 @@ public class CatalogBffController : ControllerBase
     [ProducesResponseType(typeof(PaginatedItemsResponse<CatalogItemDto>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> Items(PaginatedItemsRequest<CatalogTypeFilter> request)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
         var result = await _catalogService.GetCatalogItemsAsync(request.PageSize, request.PageIndex, request.Filters);
         return Ok(result);
     }
@@ -46,6 +51,11 @@ public class CatalogBffController : ControllerBase
     [ProducesResponseType(typeof(GetItemsResponse<CatalogItemDto>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> GetItemsById(GetItemsRequest request)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
         var result = await _catalogService.GetCatalogItemsByIdAsync(request.Id);
         return Ok(result);
     }
@@ -54,6 +64,11 @@ public class CatalogBffController : ControllerBase
     [ProducesResponseType(typeof(GetItemsResponse<CatalogItemDto>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> GetItemsByBrand(GetItemsRequest request)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
         var result = await _catalogService.GetCatalogItemsByBrandAsync(request.Id);
         return Ok(result);
     }
@@ -62,6 +77,11 @@ public class CatalogBffController : ControllerBase
     [ProducesResponseType(typeof(GetItemsResponse<CatalogItemDto>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> GetItemsByType(GetItemsRequest request)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
         var result = await _catalogService.GetCatalogItemsByTypeAsync(request.Id);
         return Ok(result);
     }
@@ -71,6 +91,11 @@ public class CatalogBffController : ControllerBase
     [ProducesResponseType(typeof(BrandsResponse<CatalogBrandDto>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> Brands()
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
         var result = await _catalogService.GetCatalogBrandsAsync();
         return Ok(result);
     }
@@ -80,6 +105,11 @@ public class CatalogBffController : ControllerBase
     [ProducesResponseType(typeof(TypesResponse<CatalogTypeDto>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> Types()
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
         var result = await _catalogService.GetCatalogTypesAsync();
         return Ok(result);
     }

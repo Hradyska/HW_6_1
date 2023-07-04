@@ -26,11 +26,11 @@ public class AuthorizeCheckOperationFilter : IOperationFilter
         };
 
         operation.Security = new List<OpenApiSecurityRequirement>
+        {
+            new OpenApiSecurityRequirement
             {
-                new OpenApiSecurityRequirement
-                {
-                    [oAuthScheme] = new[] { "swagger" }
-                }
-            };
+                [oAuthScheme] = new[] { "swagger" }
+            }
+        };
     }
 }

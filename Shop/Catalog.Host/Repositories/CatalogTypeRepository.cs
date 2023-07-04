@@ -20,8 +20,7 @@ namespace Catalog.Host.Repositories
 
         public async Task<GetTypes<CatalogType>> GetAsync()
         {
-            var types = await _dbContext.CatalogTypes
-                .OrderBy(c => c.Id).ToListAsync();
+            var types = await _dbContext.CatalogTypes.ToListAsync();
 
             return new GetTypes<CatalogType>() { Data = types };
         }

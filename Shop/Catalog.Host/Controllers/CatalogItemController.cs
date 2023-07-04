@@ -31,6 +31,11 @@ public class CatalogItemController : ControllerBase
     [ProducesResponseType(typeof(AddItemResponse<int?>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> Add(CreateProductRequest request)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
         CatalogItem item = new CatalogItem()
         {
             Name = request.Name,
@@ -60,6 +65,11 @@ public class CatalogItemController : ControllerBase
     [ProducesResponseType((int)HttpStatusCode.OK)]
     public async Task<IActionResult> Update(int id, CreateProductRequest request)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
         CatalogItem item = new CatalogItem()
         {
             Id = id,

@@ -13,11 +13,11 @@ namespace Infrastructure.RateLimit.Filters
 {
     public class LimitRequestsFilter : ActionFilterAttribute
     {
-        private int _limit;
+        private readonly int _limit;
         
         public LimitRequestsFilter(int limit)
         {
-            Limit = limit;
+           _limit = limit;
         }
 
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
