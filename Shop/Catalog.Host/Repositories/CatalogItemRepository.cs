@@ -45,19 +45,6 @@ public class CatalogItemRepository : ICatalogItemRepository
         return new PaginatedItems<CatalogItem>() { TotalCount = totalItems, Data = itemsOnPage };
     }
 
-    // public async Task<PaginatedItems<CatalogItem>> GetByPageAsync(int pageIndex, int pageSize)
-    // {
-    //    var totalItems = await _dbContext.CatalogItems
-    //        .LongCountAsync();
-    //    var itemsOnPage = await _dbContext.CatalogItems
-    //        .Include(i => i.CatalogBrand)
-    //        .Include(i => i.CatalogType)
-    //        .OrderBy(c => c.Name)
-    //        .Skip(pageSize * pageIndex)
-    //        .Take(pageSize)
-    //        .ToListAsync();
-    //    return new PaginatedItems<CatalogItem>() { TotalCount = totalItems, Data = itemsOnPage };
-    // }
     public async Task<GetItems<CatalogItem>> GetByIdAsync(int id)
     {
         var items = await _dbContext.CatalogItems
