@@ -2,6 +2,7 @@ using System.Threading;
 using Catalog.Host.Data.Entities;
 using Catalog.Host.Models.Dtos;
 using Catalog.Host.Models.Response;
+using Catalog.Host.Repositories;
 using Moq;
 
 namespace Catalog.UnitTests.Services;
@@ -50,7 +51,7 @@ public class CatalogServiceTest
                     Name = "TestName",
                 },
             },
-            TotalCount = testTotalCount,
+            TotalCount = testTotalCount
         };
 
         var catalogItemSuccess = new CatalogItem()
@@ -65,13 +66,15 @@ public class CatalogServiceTest
 
         _catalogItemRepository.Setup(s => s.GetByPageAsync(
             It.Is<int>(i => i == testPageIndex),
-            It.Is<int>(i => i == testPageSize))).ReturnsAsync(pagingPaginatedItemsSuccess);
+            It.Is<int>(i => i == testPageSize),
+            It.IsAny<int?>(),
+            It.IsAny<int?>())).ReturnsAsync(pagingPaginatedItemsSuccess);
 
         _mapper.Setup(s => s.Map<CatalogItemDto>(
             It.Is<CatalogItem>(i => i.Equals(catalogItemSuccess)))).Returns(catalogItemDtoSuccess);
 
         // act
-        var result = await _catalogService.GetCatalogItemsAsync(testPageSize, testPageIndex);
+        var result = await _catalogService.GetCatalogItemsAsync(testPageSize, testPageIndex, null);
 
         // assert
         result.Should().NotBeNull();
@@ -79,7 +82,7 @@ public class CatalogServiceTest
         result?.Count.Should().Be(testTotalCount);
         result?.PageIndex.Should().Be(testPageIndex);
         result?.PageSize.Should().Be(testPageSize);
-    }
+      }
 
     [Fact]
     public async Task GetCatalogItemsAsync_Failed()
@@ -87,13 +90,15 @@ public class CatalogServiceTest
         // arrange
         var testPageIndex = 1000;
         var testPageSize = 10000;
-
+        PaginatedItems<CatalogItem> item = null!;
         _catalogItemRepository.Setup(s => s.GetByPageAsync(
-            It.Is<int>(i => i == testPageIndex),
-            It.Is<int>(i => i == testPageSize))).Returns((Func<PaginatedItemsResponse<CatalogItemDto>>)null!);
+             It.Is<int>(i => i == testPageIndex),
+             It.Is<int>(i => i == testPageSize),
+             It.IsAny<int?>(),
+             It.IsAny<int?>())).ReturnsAsync(item);
 
         // act
-        var result = await _catalogService.GetCatalogItemsAsync(testPageSize, testPageIndex);
+        var result = await _catalogService.GetCatalogItemsAsync(testPageSize, testPageIndex, null);
 
         // assert
         result.Should().BeNull();

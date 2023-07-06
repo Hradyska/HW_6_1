@@ -4,11 +4,15 @@ using Catalog.Host.Models.Response;
 using Catalog.Host.Services;
 using Catalog.Host.Services.Interfaces;
 using Infrastructure;
+using Infrastructure.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Catalog.Host.Controllers;
 
 [ApiController]
+[Authorize(Policy = AuthPolicy.AllowClientPolicy)]
+[Scope("catalog.catalogtype")]
 [Route(ComponentDefaults.DefaultRoute)]
 public class CatalogTypeController : ControllerBase
 {
@@ -24,6 +28,11 @@ public class CatalogTypeController : ControllerBase
     [ProducesResponseType(typeof(AddTypeResponse<int?>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> Add(CreateTypeRequest request)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
         var result = await _catalogTypeService.Add(request.Type);
         return Ok(new AddTypeResponse<int?>() { Id = result });
     }
@@ -33,6 +42,11 @@ public class CatalogTypeController : ControllerBase
     [ProducesResponseType(typeof(AddTypeResponse<int?>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> Remove(int id)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
         var result = await _catalogTypeService.Remove(id);
         return Ok(new AddTypeResponse<int?>() { Id = result });
     }
@@ -42,6 +56,11 @@ public class CatalogTypeController : ControllerBase
     [ProducesResponseType(typeof(AddTypeResponse<int?>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> Update(int id, CreateTypeRequest request)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
         var result = await _catalogTypeService.Update(id, request.Type);
         return Ok(new AddTypeResponse<int?>() { Id = result });
     }

@@ -21,8 +21,7 @@ namespace Catalog.Host.Repositories
 
         public async Task<GetBrands<CatalogBrand>> GetAsync()
         {
-            var brands = await _dbContext.CatalogBrands
-                .OrderBy(c => c.Id).ToListAsync();
+            var brands = await _dbContext.CatalogBrands.ToListAsync();
             return new GetBrands<CatalogBrand>() { Data = brands };
         }
 

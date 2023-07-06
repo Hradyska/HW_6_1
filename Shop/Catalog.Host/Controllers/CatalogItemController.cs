@@ -4,11 +4,15 @@ using Catalog.Host.Models.Requests;
 using Catalog.Host.Models.Response;
 using Catalog.Host.Services.Interfaces;
 using Infrastructure;
+using Infrastructure.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Catalog.Host.Controllers;
 
 [ApiController]
+[Authorize(Policy = AuthPolicy.AllowClientPolicy)]
+[Scope("catalog.catalogitem")]
 [Route(ComponentDefaults.DefaultRoute)]
 public class CatalogItemController : ControllerBase
 {
@@ -27,6 +31,11 @@ public class CatalogItemController : ControllerBase
     [ProducesResponseType(typeof(AddItemResponse<int?>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> Add(CreateProductRequest request)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
         CatalogItem item = new CatalogItem()
         {
             Name = request.Name,
@@ -56,6 +65,11 @@ public class CatalogItemController : ControllerBase
     [ProducesResponseType((int)HttpStatusCode.OK)]
     public async Task<IActionResult> Update(int id, CreateProductRequest request)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
         CatalogItem item = new CatalogItem()
         {
             Id = id,
